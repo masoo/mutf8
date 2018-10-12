@@ -37,7 +37,7 @@ static const uint8_t m_utf8_jump_table[256] = {
  * @return utf8 character byte size
  * @note that *legal* UTF-8 values can't have 5-bytes or 6-bytes.
  */
-int64_t m_utf8_ch_byte_size(m_char8_t *str)
+int64_t m_utf8_ch_byte_size(const m_char8_t *str)
 {
     return m_utf8_jump_table[(uint8_t)(*str)];
 }
