@@ -127,3 +127,38 @@ bool m_utf8_ch_validate(const m_char8_t *character, size_t character_size)
 
     return true;
 }
+
+/**
+ * @public
+ * @fn int64_t m_utf8_str_byte_size(const m_char8_t *str, size_t max_str_size)
+ * @brief utf8 string byte size
+ * @params[in] utf8 character validate
+ * @return string byte size( add null-terminated string size)
+ * @author FUNABARA Masao
+ * @note
+ *   add null-terminated string size.
+ */
+int64_t m_utf8_str_byte_size(const m_char8_t *str, size_t max_str_size)
+{
+    const uint8_t *inptr = (uint8_t *)str;
+    const int64_t max_size = (int64_t)max_str_size;
+    int64_t str_size = 0;
+    int size = 0;
+
+    while (*inptr && str_size < max_size)
+    {
+        size = m_utf8_jump_table[*inptr];
+        str_size += size;
+        inptr += size;
+    }
+
+    if (str_size >= max_size)
+    {
+        str_size -= size;
+    }
+    if (max_size > 0)
+    {
+        str_size += 1;
+    }
+    return str_size;
+}

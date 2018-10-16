@@ -19,6 +19,8 @@ int main(void)
     m_char8_t *test_str3 = u8"🚀";
     int test_str3_size = m_utf8_ch_byte_size(test_str3);
     assert(test_str3_size == 4);
+    int test_str4_size = m_utf8_ch_byte_size(u8"あ");
+    assert(test_str4_size == 3);
 
     // test m_utf8_ch_validate
     assert(m_utf8_ch_validate(test_str1, test_str1_size) == true);
@@ -39,5 +41,40 @@ int main(void)
     assert(m_utf8_ch_validate(u8"\xf0\x28\x8c\x28", 4) == false);         //'Invalid 4 Octet Sequence (in 4th Octet)'
     assert(m_utf8_ch_validate(u8"\xf8\xa1\xa1\xa1\xa1", 5) == false);     //'Invalid 5 Octet Sequence'
     assert(m_utf8_ch_validate(u8"\xfc\xa1\xa1\xa1\xa1\xa1", 6) == false); //'Invalid 6 Octet Sequence'
+
+    // test m_utf8_str_byte_size
+    assert(m_utf8_str_byte_size(u8"a", 2) == 2);
+    assert(m_utf8_str_byte_size(u8"a", 1) == 1);
+    assert(m_utf8_str_byte_size(u8"a", 0) == 0);
+    assert(m_utf8_str_byte_size(u8"あ", 4) == 4);
+    assert(m_utf8_str_byte_size(u8"あ", 3) == 1);
+    assert(m_utf8_str_byte_size(u8"あ", 2) == 1);
+    assert(m_utf8_str_byte_size(u8"あ", 1) == 1);
+    assert(m_utf8_str_byte_size(u8"🚀", 5) == 5);
+    assert(m_utf8_str_byte_size(u8"🚀", 4) == 1);
+    assert(m_utf8_str_byte_size(u8"🚀", 3) == 1);
+    assert(m_utf8_str_byte_size(u8"🚀", 2) == 1);
+    assert(m_utf8_str_byte_size(u8"🚀", 1) == 1);
+    assert(m_utf8_str_byte_size(u8"🚀", 0) == 0);
+    assert(m_utf8_str_byte_size(u8"aa", 3) == 3);
+    assert(m_utf8_str_byte_size(u8"aa", 2) == 2);
+    assert(m_utf8_str_byte_size(u8"aa", 1) == 1);
+    assert(m_utf8_str_byte_size(u8"aa", 0) == 0);
+    assert(m_utf8_str_byte_size(u8"aあ", 5) == 5);
+    assert(m_utf8_str_byte_size(u8"aあ", 4) == 2);
+    assert(m_utf8_str_byte_size(u8"aあ", 3) == 2);
+    assert(m_utf8_str_byte_size(u8"aあ", 2) == 2);
+    assert(m_utf8_str_byte_size(u8"aあ", 1) == 1);
+    assert(m_utf8_str_byte_size(u8"aあ", 0) == 0);
+    assert(m_utf8_str_byte_size(u8"🚀aあ", 9) == 9);
+    assert(m_utf8_str_byte_size(u8"🚀aあ", 8) == 6);
+    assert(m_utf8_str_byte_size(u8"🚀aあ", 7) == 6);
+    assert(m_utf8_str_byte_size(u8"🚀aあ", 6) == 6);
+    assert(m_utf8_str_byte_size(u8"🚀aあ", 5) == 5);
+    assert(m_utf8_str_byte_size(u8"🚀aあ", 4) == 1);
+    assert(m_utf8_str_byte_size(u8"🚀aあ", 3) == 1);
+    assert(m_utf8_str_byte_size(u8"🚀aあ", 2) == 1);
+    assert(m_utf8_str_byte_size(u8"🚀aあ", 1) == 1);
+    assert(m_utf8_str_byte_size(u8"🚀aあ", 0) == 0);
     return 0;
 }
