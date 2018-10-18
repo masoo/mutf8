@@ -32,7 +32,7 @@ static const uint8_t m_utf8_jump_table[256] = {
 
 /**
  * @public
- * @fn int64_t m_utf8_ch_byte_size(const m_char8_t *character)
+ * @fn uint8_t m_utf8_ch_byte_size(const m_char8_t *character)
  * @brief utf8 character byte size
  * @param[in] character - utf8 character
  * @return utf8 character byte size
@@ -40,7 +40,7 @@ static const uint8_t m_utf8_jump_table[256] = {
  *   do not use null-terminated string.
  *   that *legal* UTF-8 values can't have 5-bytes or 6-bytes.
  */
-int64_t m_utf8_ch_byte_size(const m_char8_t *character)
+uint8_t m_utf8_ch_byte_size(const m_char8_t *character)
 {
     return m_utf8_jump_table[(uint8_t)(*character)];
 }
@@ -49,8 +49,8 @@ int64_t m_utf8_ch_byte_size(const m_char8_t *character)
  * @public
  * @fn bool m_utf8_ch_validate(const m_char8_t *character, size_t character_bytesize)
  * @brief utf8 character validate
- * @params[in] character - utf8 character
- * @params[in] character_bytesize - utf8 character byte size
+ * @param[in] character - utf8 character
+ * @param[in] character_bytesize - utf8 character byte size
  * @return true valid, false invalid
  * @author Atsushi Enomoto  <atsushi@ximian.com>
  * @sa https://github.com/corngood/mono/blob/master/eglib/src/gutf8.c
@@ -133,8 +133,8 @@ bool m_utf8_ch_validate(const m_char8_t *character, size_t character_size)
  * @public
  * @fn int64_t m_utf8_str_byte_size(const m_char8_t *str, size_t max_str_bytesize)
  * @brief utf8 string byte size
- * @params[in] str - utf8 string
- * @params[in] max_str_bytesize - utf8 string byte size( add null-terminated string size)
+ * @param[in] str - utf8 string
+ * @param[in] max_str_bytesize - utf8 string byte size( add null-terminated string size)
  * @return string byte size( add null-terminated string size)
  * @author FUNABARA Masao
  * @note
@@ -142,16 +142,15 @@ bool m_utf8_ch_validate(const m_char8_t *character, size_t character_size)
  */
 int64_t m_utf8_str_byte_size(const m_char8_t *str, size_t max_str_bytesize)
 {
-    const uint8_t *inptr = (uint8_t *)str;
     const int64_t max_size = (int64_t)max_str_bytesize;
     int64_t str_size = 0;
-    int size = 0;
+    uint8_t size = 0;
 
-    while (*inptr && str_size < max_size)
+    while (*str && str_size < max_size)
     {
-        size = m_utf8_jump_table[*inptr];
+        size = m_utf8_ch_byte_size(str);
         str_size += size;
-        inptr += size;
+        str += size;
     }
 
     if (str_size >= max_size)
@@ -163,4 +162,41 @@ int64_t m_utf8_str_byte_size(const m_char8_t *str, size_t max_str_bytesize)
         str_size += 1;
     }
     return str_size;
+}
+
+/**
+ * @public
+ * @fn bool m_utf8_str_validate(const m_char8_t *str, size_t max_str_bytesize)
+ * @brief utf8 string validate
+ * @param[in] str - utf8 string
+ * @param[in] max_str_bytesize - utf8 string byte size( add null-terminated string size)
+ * @return true valid, false invalid
+ * @author FUNABARA Masao
+ * @note
+ *   add null-terminated string size.
+ */
+bool m_utf8_str_validate(const m_char8_t *str, size_t max_str_bytesize)
+{
+    int64_t max_size = m_utf8_str_byte_size(str, max_str_bytesize);
+    int64_t str_size = 0;
+
+    while (*str && str_size < max_size)
+    {
+        uint8_t ch_byte_size = m_utf8_ch_byte_size(str);
+        bool result = m_utf8_ch_validate(str, ch_byte_size);
+        if (result == false)
+        {
+            return false;
+        }
+        uint8_t size = m_utf8_ch_byte_size(str);
+        str_size += size;
+        str += size;
+    }
+
+    if (str_size >= max_size)
+    {
+        return false;
+    }
+
+    return true;
 }
