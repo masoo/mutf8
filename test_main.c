@@ -95,6 +95,7 @@ int main(void)
         m_char8_t *str1 = u8"🚀aあ";
         int size_str1 = m_utf8_str_byte_size(str1, 9);
         assert(m_utf8_str_validate(str1, size_str1) == true);
+        assert(m_utf8_str_validate(str1, size_str1 - 1) == false);
 
         m_char8_t *str2 = u8"🚀aあ\xf0\x28\x8c\xbc";
         int size_str2 = m_utf8_str_byte_size(str2, 13);
