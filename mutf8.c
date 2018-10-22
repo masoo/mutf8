@@ -188,9 +188,8 @@ bool m_utf8_str_validate(const m_char8_t *str, size_t max_str_bytesize)
         {
             return false;
         }
-        uint8_t size = m_utf8_ch_byte_size(str);
-        str_size += size;
-        str += size;
+        str_size += ch_byte_size;
+        str += ch_byte_size;
     }
 
     if (str_size >= max_size)
@@ -199,4 +198,38 @@ bool m_utf8_str_validate(const m_char8_t *str, size_t max_str_bytesize)
     }
 
     return true;
+}
+
+/**
+ * @public
+ * @fn int64_t m_utf8_str_display_count(const m_char8_t *str, size_t max_str_bytesize)
+ * @brief utf8 string display character count
+ * @param[in] str - utf8 string
+ * @param[in] max_str_bytesize - utf8 string byte size( add null-terminated string size)
+ * @return count size;
+ * @author FUNABARA Masao
+ * @note
+ *   add null-terminated string size.
+ *   Don't correspond Emoji and Combine Strings.
+ */
+int64_t m_utf8_str_display_count(const m_char8_t *str, size_t max_str_bytesize)
+{
+    int64_t max_size = m_utf8_str_byte_size(str, max_str_bytesize);
+    int64_t str_size = 0;
+    int64_t display_count = 0;
+
+    while (*str && str_size < max_size)
+    {
+        uint8_t ch_byte_size = m_utf8_ch_byte_size(str);
+        str_size += ch_byte_size;
+        str += ch_byte_size;
+        display_count++;
+    }
+
+    if (str_size >= max_size)
+    {
+        return display_count;
+    }
+
+    return display_count;
 }

@@ -101,5 +101,15 @@ int main(void)
         int size_str2 = m_utf8_str_byte_size(str2, 13);
         assert(m_utf8_str_validate(str2, size_str2) == false);
     }
+
+    // test m_utf8_str_display_count
+    {
+        m_char8_t *str1 = u8"a";
+        int size_str1 = m_utf8_str_byte_size(str1, 2);
+        assert(m_utf8_str_display_count(str1, size_str1) == 1);
+        m_char8_t *str2 = u8"🚀aあ";
+        int size_str2 = m_utf8_str_byte_size(str2, 9);
+        assert(m_utf8_str_display_count(str2, size_str2) == 3);
+    }
     return 0;
 }
