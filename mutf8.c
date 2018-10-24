@@ -131,6 +131,84 @@ bool m_utf8_ch_validate(const m_char8_t *character, size_t character_size)
 
 /**
  * @public
+ * @fn uint32_t m_utf8_to_unicode(const m_char8_t *character)
+ * @brief utf8 character convert to unicode
+ * @param[in] character  - utf8 character
+ * @return unicode, and convert to 0 when failed.
+ * @author FUNABARA Masao
+ */
+uint32_t m_utf8_to_unicode(const m_char8_t *character)
+{
+    uint8_t *inptr = (uint8_t *)character;
+    uint8_t character_size = m_utf8_ch_byte_size(character);
+
+    bool result = m_utf8_ch_validate(character, character_size);
+    if (result == false)
+    {
+        return 0;
+    }
+
+    uint8_t *ptr = inptr + (character_size - 1);
+    uint32_t unicode = 0;
+    uint32_t shift_size = 0;
+    uint8_t mask = 0x00;
+    switch (character_size)
+    {
+    default:
+        return 0;
+    case 4:
+        mask = 0x3F;
+        unicode = (*ptr & mask);
+        ptr--;
+        /* fall through */
+    case 3:
+        mask = 0x3F;
+        if (character_size == 4)
+            shift_size = 6;
+        if (character_size == 3)
+            shift_size = 0;
+        unicode += ((*ptr & mask) << shift_size);
+        ptr--;
+        /* fall through */
+    case 2:
+        mask = 0x3F;
+        if (character_size == 4)
+            shift_size = 12;
+        if (character_size == 3)
+            shift_size = 6;
+        if (character_size == 2)
+            shift_size = 0;
+        unicode += ((*ptr & mask) << shift_size);
+        ptr--;
+        /* fall through */
+    case 1:
+        if (character_size == 4)
+        {
+            mask = 0x0F;
+            shift_size = 18;
+        }
+        if (character_size == 3)
+        {
+            mask = 0x1F;
+            shift_size = 12;
+        }
+        if (character_size == 2)
+        {
+            mask = 0x3F;
+            shift_size = 6;
+        }
+        if (character_size == 1)
+        {
+            mask = 0xFF;
+            shift_size = 0;
+        }
+        unicode += ((*ptr & mask) << shift_size);
+    }
+    return unicode;
+}
+
+/**
+ * @public
  * @fn int64_t m_utf8_str_byte_size(const m_char8_t *str, size_t max_str_bytesize)
  * @brief utf8 string byte size
  * @param[in] str - utf8 string

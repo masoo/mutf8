@@ -111,5 +111,17 @@ int main(void)
         int size_str2 = m_utf8_str_byte_size(str2, 9);
         assert(m_utf8_str_display_count(str2, size_str2) == 3);
     }
+
+    // test m_utf8_to_unicode
+    {
+        m_char8_t *str1 = u8"a";
+        assert(m_utf8_to_unicode(str1) == 0x00061);
+        m_char8_t *str2 = u8"©";
+        assert(m_utf8_to_unicode(str2) == 0x000A9);
+        m_char8_t *str3 = u8"あ";
+        assert(m_utf8_to_unicode(str3) == 0x03042);
+        m_char8_t *str4 = u8"🚀";
+        assert(m_utf8_to_unicode(str4) == 0x1F680);
+    }
     return 0;
 }
