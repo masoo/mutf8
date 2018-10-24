@@ -7,7 +7,7 @@
 
 int main(void)
 {
-    setlocale(LC_ALL, "");
+    setlocale(LC_ALL, "C");
 
     // test m_utf8_ch_byte_size
     {
@@ -50,6 +50,31 @@ int main(void)
         assert(m_utf8_ch_validate(u8"\xf0\x28\x8c\x28", 4) == false);         //'Invalid 4 Octet Sequence (in 4th Octet)'
         assert(m_utf8_ch_validate(u8"\xf8\xa1\xa1\xa1\xa1", 5) == false);     //'Invalid 5 Octet Sequence'
         assert(m_utf8_ch_validate(u8"\xfc\xa1\xa1\xa1\xa1\xa1", 6) == false); //'Invalid 6 Octet Sequence'
+    }
+
+    // test m_utf8_to_unicode
+    {
+        m_char8_t *str1 = u8"a";
+        assert(m_utf8_to_unicode(str1) == 0x00061);
+        m_char8_t *str2 = u8"©";
+        assert(m_utf8_to_unicode(str2) == 0x000A9);
+        m_char8_t *str3 = u8"あ";
+        assert(m_utf8_to_unicode(str3) == 0x03042);
+        m_char8_t *str4 = u8"🚀";
+        assert(m_utf8_to_unicode(str4) == 0x1F680);
+    }
+
+    // test m_utf8_display_width
+    {
+        setlocale(LC_ALL, "ja_JP.UTF-8");
+        m_char8_t *str1 = u8"a";
+        assert(m_utf8_display_width(str1) == 1);
+        m_char8_t *str2 = u8"©";
+        assert(m_utf8_display_width(str2) == 1);
+        m_char8_t *str3 = u8"あ";
+        assert(m_utf8_display_width(str3) == 2);
+        m_char8_t *str4 = u8"🚀";
+        assert(m_utf8_display_width(str4) == 2);
     }
 
     // test m_utf8_str_byte_size
@@ -110,18 +135,10 @@ int main(void)
         m_char8_t *str2 = u8"🚀aあ";
         int size_str2 = m_utf8_str_byte_size(str2, 9);
         assert(m_utf8_str_display_count(str2, size_str2) == 3);
+        m_char8_t *str3 = "\u30DB\u309A"; // combine string 'ポ'
+        int size_str3 = m_utf8_str_byte_size(str3, 9);
+        assert(m_utf8_str_display_count(str3, size_str3) == 2);
     }
 
-    // test m_utf8_to_unicode
-    {
-        m_char8_t *str1 = u8"a";
-        assert(m_utf8_to_unicode(str1) == 0x00061);
-        m_char8_t *str2 = u8"©";
-        assert(m_utf8_to_unicode(str2) == 0x000A9);
-        m_char8_t *str3 = u8"あ";
-        assert(m_utf8_to_unicode(str3) == 0x03042);
-        m_char8_t *str4 = u8"🚀";
-        assert(m_utf8_to_unicode(str4) == 0x1F680);
-    }
     return 0;
 }
