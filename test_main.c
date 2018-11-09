@@ -140,5 +140,95 @@ int main(void)
         assert(m_utf8_str_display_count(str3, size_str3) == 2);
     }
 
+    // test m_utf8_str_cpy
+    {
+        int dst_size;
+        m_char8_t *src = u8"あいうえお"; // 16bytes.
+
+        dst_size = 17;
+        m_char8_t dst1[dst_size];
+        m_utf8_str_cpy(dst1, dst_size, src, 16);
+        assert(m_utf8_str_display_count(dst1, dst_size) == 5);
+
+        dst_size = 16; // "あいうえお\0" size.
+        m_char8_t dst2[dst_size];
+        m_utf8_str_cpy(dst2, dst_size, src, 16);
+        assert(m_utf8_str_display_count(dst2, dst_size) == 5);
+
+        dst_size = 15;
+        m_char8_t dst3[dst_size];
+        m_utf8_str_cpy(dst3, dst_size, src, 16);
+        assert(m_utf8_str_display_count(dst3, dst_size) == 4);
+
+        dst_size = 14;
+        m_char8_t dst4[dst_size];
+        m_utf8_str_cpy(dst4, dst_size, src, 16);
+        assert(m_utf8_str_display_count(dst4, dst_size) == 4);
+
+        dst_size = 13;
+        m_char8_t dst5[dst_size];
+        m_utf8_str_cpy(dst5, dst_size, src, 16);
+        assert(m_utf8_str_display_count(dst5, dst_size) == 4);
+
+        dst_size = 12;
+        m_char8_t dst6[dst_size];
+        m_utf8_str_cpy(dst6, dst_size, src, 16);
+        assert(m_utf8_str_display_count(dst6, dst_size) == 3);
+
+        dst_size = 11;
+        m_char8_t dst7[dst_size];
+        m_utf8_str_cpy(dst7, dst_size, src, 16);
+        assert(m_utf8_str_display_count(dst7, dst_size) == 3);
+
+        dst_size = 10;
+        m_char8_t dst8[dst_size];
+        m_utf8_str_cpy(dst8, dst_size, src, 16);
+        assert(m_utf8_str_display_count(dst8, dst_size) == 3);
+
+        dst_size = 9;
+        m_char8_t dst9[dst_size];
+        m_utf8_str_cpy(dst9, dst_size, src, 16);
+        assert(m_utf8_str_display_count(dst9, dst_size) == 2);
+
+        dst_size = 8;
+        m_char8_t dst10[dst_size];
+        m_utf8_str_cpy(dst10, dst_size, src, 16);
+        assert(m_utf8_str_display_count(dst10, dst_size) == 2);
+
+        dst_size = 7;
+        m_char8_t dst11[dst_size];
+        m_utf8_str_cpy(dst11, dst_size, src, 16);
+        assert(m_utf8_str_display_count(dst11, dst_size) == 2);
+
+        dst_size = 6;
+        m_char8_t dst12[dst_size];
+        m_utf8_str_cpy(dst12, dst_size, src, 16);
+        assert(m_utf8_str_display_count(dst12, dst_size) == 1);
+
+        dst_size = 5;
+        m_char8_t dst13[dst_size];
+        m_utf8_str_cpy(dst13, dst_size, src, 16);
+        assert(m_utf8_str_display_count(dst13, dst_size) == 1);
+
+        dst_size = 4;
+        m_char8_t dst14[dst_size];
+        m_utf8_str_cpy(dst14, dst_size, src, 16);
+        assert(m_utf8_str_display_count(dst14, dst_size) == 1);
+
+        dst_size = 3;
+        m_char8_t dst15[dst_size];
+        m_utf8_str_cpy(dst15, dst_size, src, 16);
+        assert(m_utf8_str_display_count(dst15, dst_size) == 0);
+
+        dst_size = 2;
+        m_char8_t dst16[dst_size];
+        m_utf8_str_cpy(dst16, dst_size, src, 16);
+        assert(m_utf8_str_display_count(dst16, dst_size) == 0);
+
+        dst_size = 1;
+        m_char8_t dst17[dst_size];
+        m_utf8_str_cpy(dst17, dst_size, src, 16);
+        assert(m_utf8_str_display_count(dst17, dst_size) == 0);
+    }
     return 0;
 }

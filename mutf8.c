@@ -518,3 +518,48 @@ int64_t m_utf8_str_display_count(const m_char8_t *str, size_t max_str_bytesize)
 
     return display_count;
 }
+
+/**
+ * @public
+ * @fn bool m_utf8_str_cpy(m_char8_t *dst, size_t dst_array_size, const m_char8_t *src, size_t src_size)
+ * @param[out] dst - array to save string
+ * @param[in] dst_array_size - array size
+ * @param[in] src - source string
+ * @param[in] src_size - source string size
+ * @return always true
+ */
+bool m_utf8_str_cpy(m_char8_t *dst, const size_t dst_array_size, const m_char8_t *src, size_t src_size)
+{
+    int64_t src_byte_size = m_utf8_str_byte_size(src, src_size);
+    uint8_t str_size = 0;
+
+    size_t i = 0;
+    while (i < dst_array_size)
+    {
+        uint8_t size = m_utf8_ch_byte_size(src);
+        if (str_size + size >= dst_array_size)
+        {
+            *dst = '\0';
+            break;
+        }
+        if (str_size + size >= src_byte_size)
+        {
+            *dst = '\0';
+            break;
+        }
+        for (int j = 0; j < size; j++)
+        {
+            *dst = *src;
+            dst++;
+            src++;
+            i++;
+            str_size++;
+        }
+    }
+
+    return true;
+}
+
+//void m_utf8_str_cat(const m_char8_t *dst, size_t dst_array_size, const m_char8_t *src, size_t src_size)
+//{
+//}
