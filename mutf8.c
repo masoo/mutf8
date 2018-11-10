@@ -560,6 +560,23 @@ bool m_utf8_str_cpy(m_char8_t *dst, const size_t dst_array_size, const m_char8_t
     return true;
 }
 
-//void m_utf8_str_cat(const m_char8_t *dst, size_t dst_array_size, const m_char8_t *src, size_t src_size)
-//{
-//}
+/**
+ * @public
+ * @fn bool m_utf8_str_cat(m_char8_t *dst, const size_t dst_array_size, const m_char8_t *src, size_t src_size)
+ * @param[out] dst - array to save string
+ * @param[in] dst_array_size - array size
+ * @param[in] src - source string
+ * @param[in] src_size - source string size
+ * @return always true
+ */
+bool m_utf8_str_cat(m_char8_t *dst, const size_t dst_array_size, const m_char8_t *src, size_t src_size)
+{
+    int64_t dst_byte_size = m_utf8_str_byte_size(dst, dst_array_size) - 1;
+    m_char8_t *inptr = dst;
+    int64_t inptr_size = dst_array_size - dst_byte_size;
+    inptr += dst_byte_size;
+
+    m_utf8_str_cpy(inptr, inptr_size, src, src_size);
+
+    return true;
+}

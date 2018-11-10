@@ -230,5 +230,18 @@ int main(void)
         m_utf8_str_cpy(dst17, dst_size, src, 16);
         assert(m_utf8_str_display_count(dst17, dst_size) == 0);
     }
+
+    // test m_utf8_str_cat
+    {
+        int dst_size;
+        m_char8_t *src1 = u8"あいうえお";
+        m_char8_t *src2 = u8"かきくけこ";
+
+        dst_size = 31;
+        m_char8_t dst1[dst_size];
+        m_utf8_str_cpy(dst1, dst_size, src1, 16);
+        m_utf8_str_cat(dst1, dst_size, src2, 16);
+        assert(m_utf8_str_display_count(dst1, dst_size) == 10);
+    }
     return 0;
 }
